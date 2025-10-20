@@ -1,0 +1,150 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Fuse from 'fuse.js';
+import SearchBar from './components/SearchBar';
+import PDFViewer from './components/PDFViewer';
+import styles from './page.module.css';
+
+interface Script {
+  name: string;
+  filename: string;
+  path: string;
+}
+
+export default function Home() {
+  const [scripts, setScripts] = useState<Script[]>([]);
+  const [filteredScripts, setFilteredScripts] = useState<Script[]>([]);
+  const [selectedScript, setSelectedScript] = useState<Script | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [fuse, setFuse] = useState<Fuse<Script> | null>(null);
+
+  useEffect(() => {
+    loadScripts();
+  }, []);
+
+  const loadScripts = async () => {
+    try {
+      const response = await fetch('/api/scripts');
+      const data = await response.json();
+      const scriptsList = data.scripts || [];
+
+      setScripts(scriptsList);
+      setFilteredScripts(scriptsList);
+
+      // Initialize Fuse.js for fuzzy search
+      const fuseInstance = new Fuse(scriptsList, {
+        keys: ['name', 'filename'],
+        threshold: 0.4, // 0 = exact match, 1 = match anything
+        includeScore: true,
+        minMatchCharLength: 2,
+      });
+      setFuse(fuseInstance);
+
+      setLoading(false);
+    } catch (error) {
+      console.error('Error loading scripts:', error);
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = (query: string) => {
+    if (!query.trim()) {
+      setFilteredScripts(scripts);
+      return;
+    }
+
+    if (fuse) {
+      // Use fuzzy search
+      const results = fuse.search(query);
+      const matchedScripts = results.map(result => result.item);
+      setFilteredScripts(matchedScripts);
+
+      // Auto-select first result if available
+      if (matchedScripts.length > 0) {
+        setSelectedScript(matchedScripts[0]);
+      }
+    }
+  };
+
+  const handleScriptSelect = (script: Script) => {
+    setSelectedScript(script);
+  };
+
+  return (
+    <main className={styles.main}>
+      <div className={styles.container}>
+        <header className={styles.header}>
+          <h1 className={styles.title}>📜 NLP Scripts Viewer</h1>
+          <p className={styles.subtitle}>
+            Search by voice or text to find and view your scripts
+          </p>
+        </header>
+
+        <SearchBar onSearch={handleSearch} disabled={loading} />
+
+        {loading ? (
+          <div className={styles.loadingContainer}>
+            <div className={styles.spinner}></div>
+            <p>Loading scripts...</p>
+          </div>
+        ) : (
+          <>
+            {!selectedScript && filteredScripts.length > 0 && (
+              <div className={styles.scriptsGrid}>
+                <h2 className={styles.gridTitle}>
+                  {filteredScripts.length === scripts.length
+                    ? `All Scripts (${scripts.length})`
+                    : `Found ${filteredScripts.length} script${filteredScripts.length !== 1 ? 's' : ''}`}
+                </h2>
+                <div className={styles.grid}>
+                  {filteredScripts.map((script) => (
+                    <button
+                      key={script.filename}
+                      onClick={() => handleScriptSelect(script)}
+                      className={styles.scriptCard}
+                    >
+                      <div className={styles.scriptIcon}>📄</div>
+                      <div className={styles.scriptName}>{script.name}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {!selectedScript && filteredScripts.length === 0 && (
+              <div className={styles.noResults}>
+                <div className={styles.noResultsIcon}>🔍</div>
+                <h2>No scripts found</h2>
+                <p>Try a different search term or check your voice input</p>
+              </div>
+            )}
+
+            {selectedScript && (
+              <div className={styles.viewerContainer}>
+                <button
+                  onClick={() => setSelectedScript(null)}
+                  className={styles.backButton}
+                >
+                  ← Back to Scripts
+                </button>
+                <PDFViewer
+                  pdfUrl={selectedScript.path}
+                  scriptName={selectedScript.name}
+                />
+              </div>
+            )}
+
+            {!selectedScript && scripts.length === 0 && !loading && (
+              <div className={styles.noScripts}>
+                <div className={styles.noScriptsIcon}>📂</div>
+                <h2>No scripts available</h2>
+                <p>Add PDF files to the <code>public/scripts</code> folder to get started</p>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </main>
+  );
+}

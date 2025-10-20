@@ -1,10 +1,29 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import Fuse from 'fuse.js';
 import SearchBar from './components/SearchBar';
-import PDFViewer from './components/PDFViewer';
 import styles from './page.module.css';
+
+// Dynamically import PDFViewer to avoid SSR issues
+const PDFViewer = dynamic(() => import('./components/PDFViewer'), {
+  ssr: false,
+  loading: () => (
+    <div style={{ textAlign: 'center', padding: '60px' }}>
+      <div style={{
+        border: '4px solid #f3f3f3',
+        borderTop: '4px solid #667eea',
+        borderRadius: '50%',
+        width: '40px',
+        height: '40px',
+        animation: 'spin 1s linear infinite',
+        margin: '0 auto 15px'
+      }}></div>
+      <p>Loading PDF viewer...</p>
+    </div>
+  )
+});
 
 interface Script {
   name: string;
@@ -27,13 +46,13 @@ export default function Home() {
     try {
       const response = await fetch('/api/scripts');
       const data = await response.json();
-      const scriptsList = data.scripts || [];
+      const scriptsList: Script[] = data.scripts || [];
 
       setScripts(scriptsList);
       setFilteredScripts(scriptsList);
 
       // Initialize Fuse.js for fuzzy search
-      const fuseInstance = new Fuse(scriptsList, {
+      const fuseInstance = new Fuse<Script>(scriptsList, {
         keys: ['name', 'filename'],
         threshold: 0.4, // 0 = exact match, 1 = match anything
         includeScore: true,

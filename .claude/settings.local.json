@@ -5,9 +5,28 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(npm install:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(gh auth:*)",
+      "Bash(git config:*)",
+      "Bash(gh repo create:*)",
+      "Bash(vercel --version:*)",
+      "Bash(vercel:*)",
+      "Bash(cd:*)",
+      "Bash(npm run dev:*)",
+      "Bash(node --version:*)",
+      "Bash(\"/c/Program Files/gs/gs10.04.0/bin/gswin64c.exe\" --version)",
+      "Bash(\"/c/Program Files/gs/gs10.04.0/bin/gs.exe\" --version)",
+      "Bash(\"/c/Program Files/gs/gs10.04.0/bin/gswin64c.exe\" -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=\"public/scripts/Chaining_Anchors_Script.pdf\" \"public/scripts/062_Chaining_Anchors_Script_Page_1.pdf\" \"public/scripts/063_Chaining_Anchors_Script_Page_2.pdf\")",
+      "Bash(rm:*)",
+      "Bash(mv:*)",
+      "Bash(git log:*)",
+      "Bash(git restore:*)"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "shadcn"
+  ]
 }

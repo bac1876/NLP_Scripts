@@ -6,12 +6,20 @@ import styles from './SearchBar.module.css';
 interface SearchBarProps {
   onSearch: (query: string) => void;
   disabled?: boolean;
+  resetTrigger?: number;
 }
 
-export default function SearchBar({ onSearch, disabled }: SearchBarProps) {
+export default function SearchBar({ onSearch, disabled, resetTrigger }: SearchBarProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [recognition, setRecognition] = useState<any>(null);
+
+  // Reset search query when resetTrigger changes
+  useEffect(() => {
+    if (resetTrigger !== undefined) {
+      setSearchQuery('');
+    }
+  }, [resetTrigger]);
 
   useEffect(() => {
     // Initialize speech recognition if available

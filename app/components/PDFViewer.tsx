@@ -46,37 +46,34 @@ export default function PDFViewer({ pdfUrl, scriptName }: PDFViewerProps) {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <h2 className={styles.title}>{scriptName}</h2>
-        <div className={styles.controls}>
-          <div className={styles.zoomControls}>
-            <button onClick={zoomOut} disabled={scale <= 0.5} className={styles.button}>
-              🔍−
-            </button>
-            <span className={styles.zoomLevel}>{Math.round(scale * 100)}%</span>
-            <button onClick={zoomIn} disabled={scale >= 2.0} className={styles.button}>
-              🔍+
-            </button>
-          </div>
-          <div className={styles.pageControls}>
-            <button
-              onClick={previousPage}
-              disabled={pageNumber <= 1}
-              className={styles.button}
-            >
-              ← Previous
-            </button>
-            <span className={styles.pageInfo}>
-              Page {pageNumber} of {numPages}
-            </span>
-            <button
-              onClick={nextPage}
-              disabled={pageNumber >= numPages}
-              className={styles.button}
-            >
-              Next →
-            </button>
-          </div>
+      <div className={styles.floatingControls}>
+        <div className={styles.controlsGroup}>
+          <button onClick={zoomOut} disabled={scale <= 0.5} className={styles.button}>
+            🔍−
+          </button>
+          <span className={styles.zoomLevel}>{Math.round(scale * 100)}%</span>
+          <button onClick={zoomIn} disabled={scale >= 2.0} className={styles.button}>
+            🔍+
+          </button>
+        </div>
+        <div className={styles.controlsGroup}>
+          <button
+            onClick={previousPage}
+            disabled={pageNumber <= 1}
+            className={styles.button}
+          >
+            ← Previous
+          </button>
+          <span className={styles.pageInfo}>
+            Page {pageNumber} of {numPages}
+          </span>
+          <button
+            onClick={nextPage}
+            disabled={pageNumber >= numPages}
+            className={styles.button}
+          >
+            Next →
+          </button>
         </div>
       </div>
 

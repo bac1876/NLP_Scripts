@@ -37,6 +37,7 @@ export default function Home() {
   const [selectedScript, setSelectedScript] = useState<Script | null>(null);
   const [loading, setLoading] = useState(true);
   const [fuse, setFuse] = useState<Fuse<Script> | null>(null);
+  const [searchResetTrigger, setSearchResetTrigger] = useState(0);
 
   useEffect(() => {
     loadScripts();
@@ -78,11 +79,6 @@ export default function Home() {
       const results = fuse.search(query);
       const matchedScripts = results.map(result => result.item);
       setFilteredScripts(matchedScripts);
-
-      // Auto-select first result if available
-      if (matchedScripts.length > 0) {
-        setSelectedScript(matchedScripts[0]);
-      }
     }
   };
 
@@ -90,17 +86,25 @@ export default function Home() {
     setSelectedScript(script);
   };
 
+  const handleBackToScripts = () => {
+    setSelectedScript(null);
+    setFilteredScripts(scripts); // Reset to show all scripts
+    setSearchResetTrigger(prev => prev + 1); // Trigger search bar reset
+  };
+
   return (
     <main className={styles.main}>
       <div className={styles.container}>
-        <header className={styles.header}>
+        <header className={selectedScript ? styles.headerCompact : styles.header}>
           <h1 className={styles.title}>📜 NLP Scripts Viewer</h1>
-          <p className={styles.subtitle}>
-            Search by voice or text to find and view your scripts
-          </p>
+          {!selectedScript && (
+            <p className={styles.subtitle}>
+              Search by voice or text to find and view your scripts
+            </p>
+          )}
         </header>
 
-        <SearchBar onSearch={handleSearch} disabled={loading} />
+        {!selectedScript && <SearchBar onSearch={handleSearch} disabled={loading} resetTrigger={searchResetTrigger} />}
 
         {loading ? (
           <div className={styles.loadingContainer}>
@@ -124,7 +128,7 @@ export default function Home() {
                       className={styles.scriptCard}
                     >
                       <div className={styles.scriptIcon}>📄</div>
-                      <div className={styles.scriptName}>{script.name}</div>
+                      <div className={styles.scriptName}>{script.name.replace(/_/g, ' ')}</div>
                     </button>
                   ))}
                 </div>
@@ -142,14 +146,14 @@ export default function Home() {
             {selectedScript && (
               <div className={styles.viewerContainer}>
                 <button
-                  onClick={() => setSelectedScript(null)}
+                  onClick={handleBackToScripts}
                   className={styles.backButton}
                 >
                   ← Back to Scripts
                 </button>
                 <PDFViewer
                   pdfUrl={selectedScript.path}
-                  scriptName={selectedScript.name}
+                  scriptName={selectedScript.name.replace(/_/g, ' ')}
                 />
               </div>
             )}

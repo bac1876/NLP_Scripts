@@ -196,13 +196,12 @@
     white-space: nowrap;
   }
 
-  /* Ensure PDF canvas fits within mobile viewport */
+  /* Allow PDF to scale on mobile - remove max-width constraint */
   .documentContainer :global(.react-pdf__Page__canvas) {
-    max-width: 100% !important;
     height: auto !important;
   }
 
   .documentContainer :global(.react-pdf__Page) {
-    max-width: 100%;
+    /* Remove max-width to allow zooming */
   }
 }

@@ -21,7 +21,8 @@
       "Bash(mv:*)",
       "Bash(git log:*)",
       "Bash(git restore:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(sort:*)"
     ],
     "deny": [],
     "ask": []

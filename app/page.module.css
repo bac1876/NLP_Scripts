@@ -284,11 +284,23 @@
 /* Responsive */
 @media (max-width: 768px) {
   .title {
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
 
   .subtitle {
-    font-size: 1rem;
+    font-size: 0.85rem;
+  }
+
+  .header {
+    padding: 16px 10px;
+  }
+
+  .headerCompact {
+    padding: 12px 10px;
+  }
+
+  .headerCompact .title {
+    font-size: 1.2rem;
   }
 
   .grid {
@@ -297,5 +309,19 @@
 
   .scriptsGrid {
     padding: 20px;
+  }
+
+  .backButton {
+    top: 10px;
+    left: 10px;
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    border-radius: 12px;
+    gap: 6px;
+  }
+
+  .viewerContainer {
+    min-height: 100vh;
+    padding: 0;
   }
 }

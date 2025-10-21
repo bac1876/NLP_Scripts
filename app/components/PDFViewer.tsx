@@ -54,11 +54,13 @@ export default function PDFViewer({ pdfUrl, scriptName }: PDFViewerProps) {
     changePage(1);
   }
 
-  function zoomIn() {
+  function zoomIn(e: React.MouseEvent | React.TouchEvent) {
+    e.preventDefault();
     setScale(prev => Math.min(prev + 0.1, 2.0));
   }
 
-  function zoomOut() {
+  function zoomOut(e: React.MouseEvent | React.TouchEvent) {
+    e.preventDefault();
     setScale(prev => Math.max(prev - 0.1, 0.3));
   }
 
@@ -66,11 +68,21 @@ export default function PDFViewer({ pdfUrl, scriptName }: PDFViewerProps) {
     <div className={styles.container}>
       <div className={styles.floatingControls}>
         <div className={styles.controlsGroup}>
-          <button onClick={zoomOut} disabled={scale <= 0.3} className={styles.button}>
+          <button
+            onClick={zoomOut}
+            onTouchEnd={zoomOut}
+            disabled={scale <= 0.3}
+            className={styles.button}
+          >
             🔍−
           </button>
           <span className={styles.zoomLevel}>{Math.round(scale * 100)}%</span>
-          <button onClick={zoomIn} disabled={scale >= 2.0} className={styles.button}>
+          <button
+            onClick={zoomIn}
+            onTouchEnd={zoomIn}
+            disabled={scale >= 2.0}
+            className={styles.button}
+          >
             🔍+
           </button>
         </div>

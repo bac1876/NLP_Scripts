@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
@@ -18,6 +18,24 @@ export default function PDFViewer({ pdfUrl, scriptName }: PDFViewerProps) {
   const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [scale, setScale] = useState<number>(1.0);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  // Detect mobile and set appropriate initial scale
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+      if (mobile) {
+        // Set scale to fit mobile screen width (approx 0.5 for most mobiles)
+        const mobileScale = Math.min(window.innerWidth / 600, 1.0);
+        setScale(mobileScale);
+      }
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
@@ -37,18 +55,18 @@ export default function PDFViewer({ pdfUrl, scriptName }: PDFViewerProps) {
   }
 
   function zoomIn() {
-    setScale(prev => Math.min(prev + 0.2, 2.0));
+    setScale(prev => Math.min(prev + 0.1, 2.0));
   }
 
   function zoomOut() {
-    setScale(prev => Math.max(prev - 0.2, 0.5));
+    setScale(prev => Math.max(prev - 0.1, 0.3));
   }
 
   return (
     <div className={styles.container}>
       <div className={styles.floatingControls}>
         <div className={styles.controlsGroup}>
-          <button onClick={zoomOut} disabled={scale <= 0.5} className={styles.button}>
+          <button onClick={zoomOut} disabled={scale <= 0.3} className={styles.button}>
             🔍−
           </button>
           <span className={styles.zoomLevel}>{Math.round(scale * 100)}%</span>

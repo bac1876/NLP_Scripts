@@ -76,13 +76,18 @@
 }
 
 .documentContainer {
-  padding: 20px;
+  padding: 80px 20px 120px 20px; /* Top padding for back button, bottom for controls */
   background: transparent;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
   overflow-x: auto;
   overflow-y: auto;
   height: 100%;
+}
+
+.documentContainer > div {
+  max-width: 100%;
 }
 
 .loading,
@@ -118,48 +123,66 @@
 @media (max-width: 768px) {
   .container {
     height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
 
   .documentContainer {
-    padding: 10px;
-    padding-bottom: 80px; /* Make room for controls */
+    padding: 70px 5px 100px 5px; /* Reduced top, increased bottom for controls */
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 1;
   }
 
   .floatingControls {
-    bottom: 10px;
-    right: 10px;
-    left: 10px;
-    padding: 8px;
-    border-radius: 12px;
-    gap: 6px;
+    bottom: 5px;
+    right: 5px;
+    left: 5px;
+    padding: 6px;
+    border-radius: 10px;
+    gap: 4px;
     flex-direction: row;
     justify-content: space-between;
+    max-height: 80px;
   }
 
   .controlsGroup {
-    gap: 4px;
-    padding: 2px 4px;
+    gap: 3px;
+    padding: 2px 3px;
     flex: 1;
     justify-content: center;
+    flex-wrap: nowrap;
   }
 
   .controlsGroup:not(:last-child) {
     border-bottom: none;
     border-right: 1px solid rgba(255, 215, 0, 0.3);
     padding-bottom: 2px;
-    padding-right: 6px;
+    padding-right: 4px;
   }
 
   .button {
-    padding: 6px 10px;
-    font-size: 0.75rem;
-    border-radius: 8px;
+    padding: 5px 8px;
+    font-size: 0.7rem;
+    border-radius: 6px;
     min-width: auto;
+    white-space: nowrap;
   }
 
   .zoomLevel,
   .pageInfo {
-    min-width: 45px;
-    font-size: 0.75rem;
+    min-width: 35px;
+    font-size: 0.65rem;
+    white-space: nowrap;
+  }
+
+  /* Ensure PDF canvas fits within mobile viewport */
+  .documentContainer :global(.react-pdf__Page__canvas) {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  .documentContainer :global(.react-pdf__Page) {
+    max-width: 100%;
   }
 }

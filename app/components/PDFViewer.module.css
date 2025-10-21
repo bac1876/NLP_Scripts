@@ -51,12 +51,19 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);
   white-space: nowrap;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(255, 215, 0, 0.3);
 }
 
 .button:hover:not(:disabled) {
   transform: translateY(-2px) scale(1.05);
   box-shadow: 0 6px 16px rgba(255, 215, 0, 0.5);
   background: linear-gradient(135deg, #eab308 0%, #ffd700 100%);
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.95);
+  background: linear-gradient(135deg, #d4af37 0%, #c9a507 100%);
 }
 
 .button:disabled {
@@ -147,8 +154,8 @@
   }
 
   .controlsGroup {
-    gap: 3px;
-    padding: 2px 3px;
+    gap: 6px;
+    padding: 4px;
     flex: 1;
     justify-content: center;
     flex-wrap: nowrap;
@@ -162,11 +169,15 @@
   }
 
   .button {
-    padding: 5px 8px;
-    font-size: 0.7rem;
-    border-radius: 6px;
-    min-width: auto;
+    padding: 10px 12px;
+    font-size: 0.75rem;
+    border-radius: 8px;
+    min-width: 44px;
+    min-height: 44px;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .zoomLevel,

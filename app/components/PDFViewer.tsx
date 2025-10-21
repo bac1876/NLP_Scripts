@@ -20,6 +20,7 @@ export default function PDFViewer({ pdfUrl, scriptName }: PDFViewerProps) {
   const [scale, setScale] = useState<number>(1.0);
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
+
   // Detect mobile and set appropriate initial scale
   useEffect(() => {
     const checkMobile = () => {
